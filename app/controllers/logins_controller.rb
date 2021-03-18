@@ -5,7 +5,7 @@ class LoginsController < ApplicationController
 
       payload = { user_id: user.id }
       session = JWTSessions::Session.new(payload: payload)
-      render json: session.login[:access]
+      render json: { jwt: session.login[:access] }
     else
       render json: "Invalid user", status: :unauthorized
     end
