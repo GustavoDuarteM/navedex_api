@@ -7,5 +7,10 @@ RSpec.describe "Logins", type: :request do
       post "/login", params: { email: user.email, password: user.password }
       expect(response).to have_http_status(:success)
     end
+    it "Invalid account" do
+      user = create(:user)
+      post "/login", params: { email: Faker::Internet.username, password: user.password }
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 end
