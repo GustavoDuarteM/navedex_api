@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_18_031404) do
+ActiveRecord::Schema.define(version: 2021_03_19_195347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "naver_projects", force: :cascade do |t|
+    t.bigint "naver_id", null: false
+    t.bigint "project_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["naver_id"], name: "index_naver_projects_on_naver_id"
+    t.index ["project_id"], name: "index_naver_projects_on_project_id"
+  end
 
   create_table "navers", force: :cascade do |t|
     t.string "name", null: false
@@ -43,6 +52,8 @@ ActiveRecord::Schema.define(version: 2021_03_18_031404) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "naver_projects", "navers"
+  add_foreign_key "naver_projects", "projects"
   add_foreign_key "navers", "users"
   add_foreign_key "projects", "users"
 end
