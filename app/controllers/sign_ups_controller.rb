@@ -8,6 +8,8 @@ class SignUpsController < ApplicationController
     else
       render json: { error: user.errors.full_messages.join(' ,') }, status: :unprocessable_entity
     end
+  rescue
+    render json: { error: 'This email is already registered' }, status: :unprocessable_entity
   end
 
   private 
