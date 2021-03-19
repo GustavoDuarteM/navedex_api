@@ -1,6 +1,8 @@
 class Naver < ApplicationRecord
   belongs_to :user
-  has_and_belongs_to_many :projects
+  has_many :naver_project
+  has_many :projects, through: :naver_project
+
   validates :name, :birthdate, :admission_date, :job_role, presence: true
 
   scope :filter_by_name, ->(name) do
