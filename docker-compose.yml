@@ -6,16 +6,16 @@ networks:
   db_postgres:
 services:
   db:
-    image: postgres
+    image: postgres:13.2
     environment:
       POSTGRES_PASSWORD: password
     networks: 
       - db_postgres
   redis:
-    image: redis
+    image: redis:6.2.1
     networks: 
       - db_redis
-  api:
+  app:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
