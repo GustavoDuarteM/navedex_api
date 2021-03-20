@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :project do
-    name { Faker::App.name }
+    name { Faker::Name.unique.first_name }
     association :user, factory: :user
 
     factory :project_with_navers do
