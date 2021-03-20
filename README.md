@@ -33,8 +33,9 @@ Para rodar o projeto você vai precisar ter instalado o docker
 ### ⚡Como testar 
 
 #### Rotas 
-Arquivo exportado do insominia, é aqui que o campo de cada rota está documentado
+Arquivo exportado do insominia. Aqui os campos de cada rota está documentado
 
+[Insomnia_navedex_api.zip](https://github.com/GustavoDuarteM/navedex_api/files/6176219/Insomnia_navedex_api.zip)
 
 ##### Para fazer Autenticação
 As rotas de acesso irão retornar uma chave JWT que será necessários para acessar as outras rotas
