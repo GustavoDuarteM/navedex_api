@@ -26,7 +26,7 @@ RSpec.describe "Navers", type: :request do
         expect(response).to have_http_status(:success)
       end
       it "returns naver" do
-        expect(response.body).to eq(NaverWithRelationsSerializer.new(@naver).serializable_hash.to_json)
+        expect(response.body).to eq(NaverWithRelationsSerializer.new(@naver, { include: [:projects] }).serializable_hash.to_json)
       end
     end
 
@@ -49,8 +49,8 @@ RSpec.describe "Navers", type: :request do
     describe "/update" do
       before :each do
         old_naver = create(:naver, user: @user)
-        @new_nave = build(:naver, id: old_naver.id, user: nil)
-        patch "/naver/update", params: @new_nave.attributes, headers: @token
+        @new_naver = build(:naver, id: old_naver.id, user: nil)
+        patch "/naver/update", params: @new_naver.attributes, headers: @token
       end
       it "returns http success" do
         expect(response).to have_http_status(:success)
@@ -58,10 +58,10 @@ RSpec.describe "Navers", type: :request do
 
       it "returns updated naver" do
         result = eval(response.body)[:data][:attributes]
-        expect(result[:name]).to eq(@new_nave.name)
-        expect(result[:birthdate]).to eq(@new_nave.birthdate.to_s)
-        expect(result[:admission_date]).to eq(@new_nave.admission_date.to_s)
-        expect(result[:job_role]).to eq(@new_nave.job_role)
+        expect(result[:name]).to eq(@new_naver.name)
+        expect(result[:birthdate]).to eq(@new_naver.birthdate.to_s)
+        expect(result[:admission_date]).to eq(@new_naver.admission_date.to_s)
+        expect(result[:job_role]).to eq(@new_naver.job_role)
       end
     end
 

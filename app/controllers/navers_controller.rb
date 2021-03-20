@@ -4,20 +4,20 @@ class NaversController < ApplicationController
   before_action :set_projects, only: [:store, :update]
   before_action :query_navers_params, only: [:index]
   before_action :set_naver, only: [:show, :update, :delete]
-  before_action :not_found_naver, only: [:show, :delete, :update], if: -> { @naver.blank? }
+  before_action :not_found, only: [:show, :delete, :update], if: -> { @naver.blank? }
 
   def index
     render json: NaverSerializer.new(@navers).serializable_hash
   end
 
   def show
-    render json: NaverWithRelationsSerializer.new(@naver).serializable_hash
+    render json: NaverWithRelationsSerializer.new(@naver, { include: [:projects] }).serializable_hash
   end
 
   def store
     @naver = current_user.navers.new(naver_params.except(:projects).merge({ projects: @projects }))
     if valid_project_ids? && @naver.save
-      render json: NaverWithRelationsSerializer.new(@naver).serializable_hash, status: :created
+      render json: NaverWithRelationsSerializer.new(@naver, { include: [:projects] }).serializable_hash, status: :created
     else
       message = @naver.errors.full_messages.join(' ,')
       if params[:projects].present? && !valid_project_ids?
@@ -32,12 +32,10 @@ class NaversController < ApplicationController
 
   def update
     if valid_project_ids? && @naver.update(naver_params.except(:projects).merge({ projects: @projects }))
-      render json: NaverWithRelationsSerializer.new(@naver).serializable_hash
+      render json: NaverWithRelationsSerializer.new(@naver, { include: [:projects] }).serializable_hash
     else
-      message = ''
-      message = @naver.errors.full_messages.join(' ,') unless @naver.valid?
-
-      if params[:projects].present? && @projects != params[:projects].length
+      message = @naver.errors.full_messages.join(' ,')
+      if params[:projects].present? && valid_project_ids?
         missing_projects_ids = (params[:projects] - @projects.pluck(:id)).join(', ')
         message += ', ' if message.present?
         message += "No project(s) were found with these id(s): #{missing_projects_ids}"
@@ -56,10 +54,6 @@ class NaversController < ApplicationController
   end
 
   private
-
-  def not_found_naver
-    render json: nil, status: :not_found
-  end
 
   def naver_params
     params.permit(
