@@ -1,24 +1,57 @@
-# README
+# Navedex Api
+ Um navedex's pra gerenciar sers navers e projetos. 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### 🛠️ Stack 
+ - Docker v20.10.5
+ - Ruby v3.0.0
+ - Ruby one Rails v6.1.3
+ - Postgres v13.2
+ - Redis v6.2.1
 
-Things you may want to cover:
+### 💎 Gems
+ - jwt_sessions
+ - jsonapi-serializer
+ - bcrypt
+ - rspec-rails
+ - factory_bot_rails
+ 
 
-* Ruby version
+### ⚙️ Configurações 
+Para rodar o projeto você vai precisar ter instalado o docker
 
-* System dependencies
+### 🚀 Inicializando o projeto 
+1º Clone o repositório
 
-* Configuration
+2º Acesse a pasta do projeto no terminal e rode os seguintes comandos
+```
+  docker-compose build
+  docker-compose up -d
+  docker-compose exec app rails db:create db:migrate
+```
+✨ O projeto está rodando e pode ser acessado http://0.0.0.0:3000 
 
-* Database creation
+### ⚡Como testar 
 
-* Database initialization
+#### Rotas 
+Arquivo exportado do insominia, é aqui que o campo de cada rota está documentado
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
+##### Para fazer Autenticação
+As rotas de acesso irão retornar uma chave JWT que será necessários para acessar as outras rotas
 
-* Deployment instructions
+ - Novo Cadastro `/sign_up`
+ - Acessar `/login`
+  
+##### Para acessar Navers e Projects
+⚠️ As rotas exigem autenticação ⚠️
 
-* ...
+Usando o token gerado na autenticação ele deve ser usado como parâmetro no header da requisição
+Com o insomnia você deve inserir essa chave no campo `token` que está acessível no seguinte menu `Auth/Bearer Token`
+
+|        |     Navers    |     Projects    |
+|--------|:-------------:|:---------------:|
+| Index  | /naver/index  | /project/index  |
+| Store  | /naver/store  | /project/store  |
+| Show   | /naver/show   | /project/show   |
+| Update | /naver/update | /project/update |
+| Delete | /naver/delete | /project/delete |
