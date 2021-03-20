@@ -28,7 +28,7 @@ Para rodar o projeto você vai precisar ter instalado o docker
   docker-compose up -d
   docker-compose exec app rails db:create db:migrate
 ```
-✨ O projeto está rodando e pode ser acessado http://0.0.0.0:3000 
+✨ O projeto está rodando e pode ser acessado http://localhost:3000/
 
 ### ⚡Como testar 
 
