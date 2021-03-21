@@ -19,7 +19,7 @@ RSpec.describe "Navers", type: :request do
 
     describe "/show" do
       before :each do
-        @naver = create(:naver, user: @user)
+        @naver = create(:naver_with_projects, user: @user)
         get "/naver/show/#{@naver.id}", headers: @token
       end
       it "returns http success" do
@@ -67,7 +67,7 @@ RSpec.describe "Navers", type: :request do
 
     describe "/delete" do
       before :each do
-        @naver = create(:naver, user: @user)
+        @naver = create(:naver_with_projects, user: @user)
         delete "/naver/delete/#{@naver.id}", headers: @token
       end
       it "returns http success" do

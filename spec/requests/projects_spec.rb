@@ -19,7 +19,7 @@ RSpec.describe "Projects", type: :request do
 
     describe "/show" do
       before :each do
-        @project = create(:project, user: @user)
+        @project = create(:project_with_navers, user: @user)
         get "/project/show/#{@project.id}", headers: @token
       end
       it "returns http success" do
@@ -64,7 +64,7 @@ RSpec.describe "Projects", type: :request do
 
     describe "/delete" do
       before :each do
-        @project = create(:project, user: @user)
+        @project = create(:project_with_navers, user: @user)
         delete "/project/delete/#{@project.id}", headers: @token
       end
       it "returns http success" do
