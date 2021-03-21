@@ -46,7 +46,7 @@ As rotas de acesso irão retornar uma chave JWT que será necessários para aces
 ##### Para acessar Navers e Projects
 ⚠️ As rotas exigem autenticação ⚠️
 
-Usando o token gerado na autenticação ele deve ser usado como parâmetro no header da requisição
+A chave JWT gerado na autenticação deve ser usado como parâmetro no header da requisição.
 Com o insomnia você deve inserir essa chave no campo `token` que está acessível no seguinte menu `Auth/Bearer Token`
 
 |        |     Navers    |     Projects    |
