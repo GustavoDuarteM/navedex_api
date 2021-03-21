@@ -8,7 +8,7 @@ FactoryBot.define do
 
     factory :naver_with_projects do
       after(:create) do |naver|
-        create_list(:project, rand(1...20), navers: [naver])
+        create_list(:project, rand(1...20), navers: [naver], user: naver.user)
       end
     end
   end

@@ -2,7 +2,8 @@ class ProjectsController < ApplicationController
   before_action :authorize_access_request!
   before_action :set_projects, only: [:index]
   before_action :set_navers, only: [:store, :update]
-  before_action :query_projects_params, only: [:index]
+  before_action :filter_projects_params, only: [:index]
+  before_action :filter_projects, only: [:index], unless: -> { filter_projects_params.empty? }
   before_action :set_project, only: [:show, :update, :delete]
   before_action :not_found, only: [:show, :delete, :update], if: -> { @project.blank? }
 
@@ -34,7 +35,7 @@ class ProjectsController < ApplicationController
     if valid_navers_ids? && @project.update(projects_params.except(:navers).merge({ navers: @navers }))
       render json: ProjectWithRelationsSerializer.new(@project, { include: [:navers] }).serializable_hash
     else
-      message = @project.errors.full_messages.join(' ,') 
+      message = @project.errors.full_messages.join(' ,')
 
       if params[:naver].present? && valid_navers_ids?
         missing_navers_ids = (params[:navers] - @naver.pluck(:id)).join(', ')
@@ -56,19 +57,16 @@ class ProjectsController < ApplicationController
 
   private
 
-  def query_projects_params
-    params.permit(:name)
-  end
-
   def projects_params
     params.permit(:name, navers: [])
   end
 
+  def filter_projects_params
+    params.permit(:name)
+  end
+
   def set_projects
-    unless query_projects_params.empty?
-      @projects = current_user.projects.filter_by_name(params[:name]) rescue nil
-    end
-    @projects ||= current_user.projects
+    @projects = current_user.projects
   end
 
   def set_project
@@ -77,6 +75,10 @@ class ProjectsController < ApplicationController
 
   def set_navers
     @navers = current_user.navers.where(id: params[:navers])
+  end
+
+  def filter_projects
+    @projects = @projects.filter_by_name(params[:name]) if params[:name].present?
   end
 
   def valid_navers_ids?
