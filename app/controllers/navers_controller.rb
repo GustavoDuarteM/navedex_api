@@ -1,8 +1,9 @@
 class NaversController < ApplicationController
   before_action :authorize_access_request!
   before_action :set_navers, only: [:index]
+  before_action :filter_navers_params, only: [:index]
+  before_action :filter_navers, only: [:index], unless: -> { filter_navers_params.empty? }
   before_action :set_projects, only: [:store, :update]
-  before_action :query_navers_params, only: [:index]
   before_action :set_naver, only: [:show, :update, :delete]
   before_action :not_found, only: [:show, :delete, :update], if: -> { @naver.blank? }
 
@@ -65,41 +66,32 @@ class NaversController < ApplicationController
     )
   end
 
-  def query_navers_params
+  def filter_navers_params
     params.permit(:name, :job_role, :admission_date)
   end
 
   def set_navers
-    if !query_navers_params.empty? &&
-       query_navers_params.to_h.reduce(false){ |result, params| params[1].present? || result }
-
-      @navers = current_user.navers.filter_by_name(params[:name]) if params[:name].present?
-
-      if params[:job_role].present?
-        @navers = @navers.filter_by_job_role(params[:job_role]) if @navers
-        @navers ||= current_user.navers.filter_by_job_role(params[:job_role])
-      end
-
-      if params[:admission_date].present?
-        date = DateTime.parse(params[:admission_date])
-        @navers = @navers.filter_by_admission_date(date) if @navers
-        @navers ||= current_user.navers.filter_by_admission_date(date)
-      end
-    else
-      @navers = current_user.navers
-    end
+    @navers = current_user.navers
   end
 
   def set_naver
     @naver = current_user.navers.find(params[:id]) rescue nil
   end
+  
+  def set_projects
+    @projects = current_user.projects.where(id: params[:projects])
+  end
+
+  def filter_navers
+    @navers = @navers.filter_by_name(params[:name]) if params[:name].present?
+    @navers = @navers.filter_by_job_role(params[:job_role]) if params[:job_role].present?
+    @navers = @navers.filter_by_admission_date(DateTime.parse(params[:admission_date])) if params[:admission_date].present?
+  end
+
 
   def valid_project_ids?
     projects_length = params[:projects].length rescue 0
     @projects.length == projects_length
   end
 
-  def set_projects
-    @projects = current_user.projects.where(id: params[:projects])
-  end
 end
