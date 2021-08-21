@@ -1,5 +1,5 @@
 # Navedex Api
- Um navedex's pra gerenciar sers navers e projetos. 
+  Um navedex pra gerenciar seus navers e projetos.
 
 ### 🛠️ Stack 
  - Docker v20.10.5
